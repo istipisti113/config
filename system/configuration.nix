@@ -5,12 +5,20 @@
 { config, pkgs, lib, ... }:
 
 let
-  home-manager = builtins.fetchTarball https://github.com/nix-community/home-manager/archive/release-25.11.tar.gz;
+  home-manager = builtins.fetchTarball {
+    url = "https://github.com/nix-community/home-manager/archive/release-25.11.tar.gz";
+    sha256 = "0cj29gac5xywcw5g746skb3hqnavwyvjv8kahbhp7n3jjimckvj8";
+  };
   nurpkgs = import (builtins.fetchTarball {
     url = "https://github.com/nix-community/NUR/archive/main.tar.gz";
+    sha256 = "0000000000000000000000000000000000000000000000000000";
   }) { inherit pkgs; };
-  unstable = import (fetchTarball "https://github.com/NixOS/nixpkgs/tarball/nixos-unstable") {
+  unstable = import (fetchTarball {
+    url = "https://github.com/NixOS/nixpkgs/tarball/nixos-unstable";
+    sha256 = "0dynsry50zjkxsrfb80n2sh8kngi1b0arvr9sampw1ln078qkb20";
+  }) {
     config.allowUnfree = true;
+    system = "x86_64-linux";
   };
 
 in{
@@ -286,7 +294,7 @@ in{
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "25.05"; # Did you read the comment?
+  system.stateVersion = "25.11"; # Did you read the comment?
 
   programs.nix-ld.enable = true;
   programs.adb.enable = true;
