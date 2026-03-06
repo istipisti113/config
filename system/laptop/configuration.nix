@@ -22,12 +22,21 @@ let
   };
 
 in{
+  _module.args = {inherit unstable;};
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
   #nixpkgs.overlays = [nurpkgs.overlay];
   #nixpkgs.overlays = [
   #  (import ./overlays/beeper.nix)
   #];
+
+  nixpkgs.overlays = [
+    (self: super: {
+      unstable = import unstable.path {
+        inherit (super) system config;
+      };
+    })
+  ];
 
   nixpkgs.config.packageOverrides = pkgs: {
     nur = import (builtins.fetchTarball "https://github.com/nix-community/NUR/archive/main.tar.gz") {
@@ -40,6 +49,8 @@ in{
     [
       (import "${home-manager}/nixos")
       ./hardware-configuration.nix
+      ./packages.nix
+      ../modules/common.nix
     ];
   users.users.istipisti113 = {
     isNormalUser = true;
@@ -129,67 +140,6 @@ in{
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    git
-    home-manager
-    neovim
-    alacritty
-    waybar
-    wofi
-    firefox
-    hyprpaper
-    hyprland
-    sway
-    tidal-hifi
-    unstable.spotify
-    playerctl
-    transmission_4-qt
-    vlc
-    obsidian
-    jq
-    cargo
-    steam
-    prusa-slicer
-    curl
-    unzip
-    zip
-    android-studio
-    wine
-    lshw
-    gcc
-    clang
-    rust-analyzer
-    logmein-hamachi
-    unstable.tailscale
-    #discord-screenaudio
-    vscode-langservers-extracted
-    #nvidia-prime
-    mesa-demos
-    #nvidia-x11
-    #nvidia-settings
-    #nvidia-persistenced
-    gptfdisk
-    gparted
-    fluxbox
-    fish
-    lutris
-    godot
-    unityhub
-    unrar
-    obs-studio-plugins.obs-vkcapture
-    beeper
-    tmux
-    vial
-    unstable.codecrafters-cli
-    teamviewer
-
-    libusb1
-    rtl-sdr
-    gqrx
-    #ventoy
-    pix
-    direnv
-  ];
   environment.sessionVariables = { DOTNET_ROOT = "${pkgs.dotnet-sdk}/share/dotnet"; };
 
   hardware.pulseaudio.enable = false;
