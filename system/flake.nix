@@ -9,13 +9,15 @@
 
   outputs = { self, nixpkgs, ... }@inputs: {
     # Replace "your-hostname" with your actual system's hostname.
-    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
-      # Replace with your system's architecture (e.g., "x86_64-linux", "aarch64-linux").
-      system = "x86_64-linux";
-      modules = [
-        # Import your existing configuration file.
-        ./configuration.nix
-      ];
+    nixosConfigurations = {
+      laptop = nixpkgs.lib.nixosSystem {
+        # Replace with your system's architecture (e.g., "x86_64-linux", "aarch64-linux").
+        system = "x86_64-linux";
+        modules = [
+          # Import your existing configuration file.
+          ./laptop/configuration.nix
+        ];
+      };
     };
   };
 }
