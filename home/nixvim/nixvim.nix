@@ -2,7 +2,7 @@
 {
   globals.mapleader = " ";
   imports = [
-    /home/istipisti113/.config/home-manager/nixvim/cmp.nix
+    /home/istipisti113/config/home/nixvim/cmp.nix
     #/home/istipisti113/.config/home-manager/nixvim/blink.nix
   ];
   enable = true;
