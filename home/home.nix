@@ -16,7 +16,7 @@ in {
   # nur github oldala!
   #nixpkgs.overlays = [ nur.overlay ];
   #sway config
-  home.file."0256.jpg".source = /home/istipisti113/.config/home-manager/0256.jpg;
+  home.file."0256.jpg".source = /home/istipisti113/config/home/0256.jpg;
   imports = [nixvim.homeModules.nixvim];
   wayland.windowManager.sway = {
     enable = true;
@@ -267,7 +267,7 @@ in {
 
   programs.waybar = {
     enable = true;
-    style = /home/istipisti113/.config/home-manager/waybar/style.css;
+    style = /home/istipisti113/config/home/waybar/style.css;
     settings = {
       mainBar = {
         position = "top";
@@ -336,7 +336,7 @@ in {
 
   programs.nixvim = {
     imports = [
-      /home/istipisti113/.config/home-manager/nixvim/nixvim.nix
+      /home/istipisti113/config/home/nixvim/nixvim.nix
       #/home/istipisti113/.config/home-manager/beeper.nix
     ];
   };
