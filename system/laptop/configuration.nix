@@ -24,6 +24,7 @@ let
 in{
   _module.args = {inherit unstable;};
   nix.settings.experimental-features = ["nix-command" "flakes"];
+  nix.settings.auto-optimise-store = true;
 
   #nixpkgs.overlays = [nurpkgs.overlay];
   #nixpkgs.overlays = [

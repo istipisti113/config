@@ -56,11 +56,11 @@ in {
           "${mod}+k" = "focus right";
           "${mod}+j" = "focus left";
 
-          "${mod}+space" = "exec --no-startup-id bash -c 'playerctl --player=spotify play-pause'";
-          "${mod}+right" = "exec --no-startup-id bash -c 'playerctl --player=spotify next'";
-          "${mod}+left" = "exec --no-startup-id bash -c 'playerctl --player=spotify previous'";
-          "${mod}+up" = "exec --no-startup-id bash -c 'playerctl --player=spotify volume 0.1+'";
-          "${mod}+down" = "exec --no-startup-id bash -c 'playerctl --player=spotify volume 0.1-'";
+          "${mod}+space" = "exec --no-startup-id bash -c 'playerctl --player=synapce play-pause'";
+          "${mod}+right" = "exec --no-startup-id bash -c 'playerctl --player=synapce next'";
+          "${mod}+left" = "exec --no-startup-id bash -c 'playerctl --player=synapce previous'";
+          "${mod}+up" = "exec --no-startup-id bash -c 'playerctl --player=synapce volume 0.1+'";
+          "${mod}+down" = "exec --no-startup-id bash -c 'playerctl --player=synapce volume 0.1-'";
         }
       ];
       output = {
