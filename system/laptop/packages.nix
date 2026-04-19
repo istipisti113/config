@@ -27,6 +27,7 @@
     vial
     unstable.codecrafters-cli
     teamviewer
+    cargo-generate
 
     libusb1
     rtl-sdr
@@ -34,5 +35,15 @@
     #ventoy
     pix
     direnv
+
+    orca-slicer
+    (heroic.override {
+      extraPkgs = pkgs': with pkgs'; [
+        gamescope
+        gamemode
+      ];
+    })
+
+    fuse-overlayfs
   ];
 }

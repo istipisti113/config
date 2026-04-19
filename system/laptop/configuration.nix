@@ -24,6 +24,7 @@ let
 in{
   _module.args = {inherit unstable;};
   nix.settings.experimental-features = ["nix-command" "flakes"];
+  nix.settings.auto-optimise-store = true;
 
   #nixpkgs.overlays = [nurpkgs.overlay];
   #nixpkgs.overlays = [
@@ -166,6 +167,8 @@ in{
     dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
     localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
   };
+  programs.gamescope.enable = true;
+  programs.gamemode.enable = true;
 
   services.xserver.desktopManager.plasma6.enable = true;
   services.xserver.displayManager.sddm.enable = false;
