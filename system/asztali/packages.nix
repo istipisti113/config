@@ -6,5 +6,8 @@
 		neovim
 		git
 		wget
+    fish
+    jdk
+    logmein-hamachi
 	];
 }
