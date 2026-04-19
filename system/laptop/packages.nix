@@ -35,7 +35,15 @@
     #ventoy
     pix
     direnv
-    
+
     orca-slicer
+    (heroic.override {
+      extraPkgs = pkgs': with pkgs'; [
+        gamescope
+        gamemode
+      ];
+    })
+
+    fuse-overlayfs
   ];
 }
