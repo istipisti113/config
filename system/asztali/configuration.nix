@@ -3,8 +3,24 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 { config, pkgs, ... }:
+let
+  home-manager = builtins.fetchTarball {
+    url = "https://github.com/nix-community/home-manager/archive/release-25.11.tar.gz";
+    sha256 = "0cj29gac5xywcw5g746skb3hqnavwyvjv8kahbhp7n3jjimckvj8";
+  };
+  nurpkgs = import (builtins.fetchTarball {
+    url = "https://github.com/nix-community/NUR/archive/main.tar.gz";
+    sha256 = "0000000000000000000000000000000000000000000000000000";
+  }) { inherit pkgs; };
+  unstable = import (fetchTarball {
+    url = "https://github.com/NixOS/nixpkgs/tarball/nixos-unstable";
+    sha256 = "1cb124rcycigz060wsix7a9bnyjdgwqns2fynkyfn20jgwxds6kg";
+  }) {
+    config.allowUnfree = true;
+    system = "x86_64-linux";
+  };
 
-{
+in{
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
