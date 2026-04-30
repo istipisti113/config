@@ -168,7 +168,18 @@ in {
     sdrpp
     speedtest-cli
     element-desktop
+
+    zoxide
   ];
+
+  programs.zoxide.enable = true;
+
+  programs.fish = {
+    enable = true;
+    interactiveShellInit = ''
+      zoxide init fish | source
+    '';
+  };
 
   programs.bash = {
     initExtra = ''
@@ -229,9 +240,10 @@ in {
 
   programs.git = {
     enable = true;
-    userName = "Szabo Istvan";
-    userEmail = "pisti4395@gmail.com";
-    extraConfig = {
+    settings = {
+      user.name = "Szabo Istvan";
+      user.email = "pisti4395@gmail.com";
+
       #credential.helper = "${pkgs.git.override { withLibsecret = true;}}/bin/git-credential-libsecret";
       credential = {
         #credentialStore = "secretservice";

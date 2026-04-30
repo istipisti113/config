@@ -45,5 +45,7 @@
     })
 
     fuse-overlayfs
+    exercism
+    SDL2
   ];
 }
