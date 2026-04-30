@@ -52,6 +52,7 @@
     clang
     rust-analyzer
     vscode-langservers-extracted
-    transmission-cli
+
+    transmission_4
   ];
 }
