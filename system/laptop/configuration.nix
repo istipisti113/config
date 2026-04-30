@@ -15,7 +15,7 @@ let
   }) { inherit pkgs; };
   unstable = import (fetchTarball {
     url = "https://github.com/NixOS/nixpkgs/tarball/nixos-unstable";
-    sha256 = "0dynsry50zjkxsrfb80n2sh8kngi1b0arvr9sampw1ln078qkb20";
+    sha256 = "1cb124rcycigz060wsix7a9bnyjdgwqns2fynkyfn20jgwxds6kg";
   }) {
     config.allowUnfree = true;
     system = "x86_64-linux";
@@ -82,6 +82,7 @@ in{
   boot.extraModprobeConfig = ''
     options v4l2loopback devices=1 video_nr=10 exclusive_caps=1 card_label="xiaomi FullHD Webcam"
   '';
+  boot.supportedFilesystems = ["nfs"];
 
   security.wrappers = {
     bwrap = {

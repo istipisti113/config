@@ -47,5 +47,6 @@
     fuse-overlayfs
     exercism
     SDL2
+    nfs-utils
   ];
 }
