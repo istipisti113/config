@@ -21,10 +21,13 @@ let
   };
 
 in{
+  _module.args = {inherit unstable;};
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./packages.nix
+      ../modules/common.nix
+      ../modules/gitlab.nix
     ];
   nix.settings.experimental-features = ["nix-command" "flakes"];
   nix.settings.auto-optimise-store = true;
