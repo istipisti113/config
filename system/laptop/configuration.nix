@@ -1,7 +1,7 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-
+#laptop
 { config, pkgs, lib, ... }:
 
 let
@@ -55,7 +55,9 @@ in{
     ];
   users.users.istipisti113 = {
     isNormalUser = true;
-    extraGroups = [ "video" "wheel" "input" "networkmanager" "bluetooth" "adbusers" "plugdev" "dialout"];
+    extraGroups = [ "video" "wheel" "input" 
+      #"uinput"
+      "networkmanager" "bluetooth" "adbusers" "plugdev" "dialout"];
     shell = pkgs.fish;
   };
   home-manager.backupFileExtension = "backup";
@@ -77,10 +79,13 @@ in{
       };
     }))
   ];
-  boot.kernelModules = ["v4l2loopback"];
+  boot.kernelModules = ["v4l2loopback" 
+    #"uinput"
+    "hid-sony" "hid-playstation"];
   boot.kernelParams = ["modpbrobe.blacklist=dvb_usb_rtl28xxu"];
   boot.extraModprobeConfig = ''
     options v4l2loopback devices=1 video_nr=10 exclusive_caps=1 card_label="xiaomi FullHD Webcam"
+    options hid_sony oem_hotplug=1
   '';
   boot.supportedFilesystems = ["nfs"];
 
@@ -96,7 +101,7 @@ in{
   swapDevices = lib.mkForce [{device = "/dev/disk/by-uuid/fcf14eaf-ee88-4a23-838a-5b23386b8187";}];
 
 
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = "nixos_laptop"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -123,6 +128,19 @@ in{
     LC_TELEPHONE = "hu_HU.UTF-8";
     LC_TIME = "hu_HU.UTF-8";
   };
+
+  #services.input-remapper.enable = true;
+  #hardware.steam-hardware.enable = true;
+
+  #services.udev.extraRules = ''
+  ## DualShock 4 (Gen 1 & 2) over Bluetooth
+  #KERNEL=="hidraw*", ATTRS{idVendor}=="054c", ATTRS{idProduct}=="05c4", MODE="0666"
+  #KERNEL=="hidraw*", ATTRS{idVendor}=="054c", ATTRS{idProduct}=="09cc", MODE="0666"
+
+  ## Ensure it is treated as a gamepad, not a mouse
+  #ENV{ID_INPUT_JOYSTICK}="1"
+  #ENV{ID_INPUT_MOUSE}="0"
+  #'';
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -162,6 +180,12 @@ in{
   services.tailscale.package = unstable.tailscale;
   services.mullvad-vpn.enable = true;
 
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = with pkgs; [
+    xorg.libX11
+    libGL
+  ];
+
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
@@ -197,8 +221,18 @@ in{
   };
 
   hardware.rtl-sdr.enable = true;
-  services.udev.packages = with pkgs; [via oversteer rtl-sdr];
-  hardware.bluetooth.enable = true;
+  services.udev.packages = with pkgs; [via oversteer rtl-sdr game-devices-udev-rules];
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+    settings = {
+      General = {
+        Enable = "Source,Sink,Media,Socket";
+        UserspaceHID = true;
+      }; 
+    };
+  };
+
   hardware.keyboard.qmk.enable = true;
   hardware.graphics.enable = true;
   hardware.graphics.enable32Bit = true;
@@ -223,6 +257,7 @@ in{
   #services.xserver.videoDrivers = [ "nvidia" ]; 
   #hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
   services.blueman.enable = true;
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
@@ -250,7 +285,6 @@ in{
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "25.11"; # Did you read the comment?
 
-  programs.nix-ld.enable = true;
   programs.adb.enable = true;
 
   specialisation = {

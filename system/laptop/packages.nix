@@ -22,12 +22,14 @@
     unityhub
     unrar
     obs-studio-plugins.obs-vkcapture
+    pixelorama
     beeper
     tmux
     vial
     unstable.codecrafters-cli
     teamviewer
     cargo-generate
+    python3
 
     libusb1
     rtl-sdr
@@ -48,5 +50,11 @@
     exercism
     SDL2
     nfs-utils
+
+    wireshark
+    nmap
+    metasploit
+
+    xorg.libX11
   ];
 }
