@@ -29,7 +29,7 @@ in {
       terminal = "alacritty";
       menu = "wofi --show drun";
       bars = [];
-      input."*".xkb_layout = "hu";
+      input."*".xkb_layout = "us";
       input."65251:0:Thomas_Haukland_cheapino2_Keyboard".xkb_layout = "us";
       keybindings = lib.attrsets.mergeAttrsList  [
         #(lib.attrsets.mergeAttrsList)

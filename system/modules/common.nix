@@ -4,6 +4,7 @@
     home-manager
     neovim
     htop
+    btop
     fortune
     git
     git-credential-manager
@@ -54,5 +55,7 @@
     vscode-langservers-extracted
 
     transmission_4
+
+    openvpn
   ];
 }

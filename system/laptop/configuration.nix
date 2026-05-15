@@ -129,6 +129,15 @@ in{
     LC_TIME = "hu_HU.UTF-8";
   };
 
+  xdg.portal = {
+    enable = true;
+    xdgOpenUsePortal = true;
+    extraPortals = [pkgs.xdg-desktop-portal-gtk];
+    config.common = {
+      default = ["gtk"];
+    };
+  };
+
   #services.input-remapper.enable = true;
   #hardware.steam-hardware.enable = true;
 
