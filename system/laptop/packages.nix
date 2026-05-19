@@ -30,6 +30,8 @@
     teamviewer
     cargo-generate
     python3
+    wireguard-ui
+    wireguard-tools
 
     libusb1
     rtl-sdr

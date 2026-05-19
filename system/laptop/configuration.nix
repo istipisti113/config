@@ -157,6 +157,9 @@ in{
     variant = "";
   };
 
+  #networking.wireguard.enable = true;
+  services.resolved.enable = true;
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   security.sudo.enable = true;
   security.sudo.wheelNeedsPassword = false;
@@ -278,7 +281,7 @@ in{
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
+  #services.openssh.enable = true;
 
   # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [ 8000 22 ];
