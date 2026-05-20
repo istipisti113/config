@@ -47,7 +47,8 @@
     tree-sitter
     nodejs
     nixd
-    busybox
+    #busybox
+    coreutils
     cargo
     gcc
     clang
@@ -57,5 +58,7 @@
     transmission_4
 
     openvpn
+
+    lynis
   ];
 }

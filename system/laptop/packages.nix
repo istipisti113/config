@@ -3,10 +3,10 @@
   environment.systemPackages = with pkgs; [
     unstable.spotify
     playerctl
-    obsidian
+    #obsidian
     jq
     steam
-    prusa-slicer
+    #prusa-slicer
     #android-studio
     wine
     lshw
@@ -19,19 +19,19 @@
     gparted
     lutris
     godot
-    unityhub
+    #unityhub
     unrar
     obs-studio-plugins.obs-vkcapture
     pixelorama
     beeper
     tmux
     vial
-    unstable.codecrafters-cli
-    teamviewer
+    #unstable.codecrafters-cli
+    #teamviewer
     cargo-generate
-    python3
-    wireguard-ui
-    wireguard-tools
+    #python3
+    #wireguard-ui
+    #wireguard-tools
 
     libusb1
     rtl-sdr
@@ -48,7 +48,7 @@
       ];
     })
 
-    fuse-overlayfs
+    #fuse-overlayfs
     exercism
     SDL2
     nfs-utils
@@ -58,5 +58,6 @@
     metasploit
 
     xorg.libX11
+    lix
   ];
 }
