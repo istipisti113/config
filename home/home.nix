@@ -29,7 +29,7 @@ in {
       terminal = "alacritty";
       menu = "wofi --show drun";
       bars = [];
-      input."*".xkb_layout = "hu";
+      input."*".xkb_layout = "us";
       input."65251:0:Thomas_Haukland_cheapino2_Keyboard".xkb_layout = "us";
       keybindings = lib.attrsets.mergeAttrsList  [
         #(lib.attrsets.mergeAttrsList)
@@ -43,15 +43,15 @@ in {
           "${mod}+w" = "exec --no-startup-id bash -c '/home/istipisti113/.config/home-manager/scripts/waybar_restart.sh'";
 
           #movement
-          "${mod}+l" = "exec --no-startup-id bash -c '/home/istipisti113/.config/home-manager/scripts/wrkspc.sh next'"; #workspace to workspace
-          "${mod}+h" = "exec --no-startup-id bash -c '/home/istipisti113/.config/home-manager/scripts/wrkspc.sh prev'";
-          "${mod}+u" = "exec --no-startup-id bash -c '/home/istipisti113/.config/home-manager/scripts/wrkspc.sh mprev'"; #monitor to monitor
-          "${mod}+i" = "exec --no-startup-id bash -c '/home/istipisti113/.config/home-manager/scripts/wrkspc.sh mnext'";
+          "${mod}+l" = "exec --no-startup-id bash -c '/home/istipisti113/config/scripts/wrkspc.sh next'"; #workspace to workspace
+          "${mod}+h" = "exec --no-startup-id bash -c '/home/istipisti113/config/scripts/wrkspc.sh prev'";
+          "${mod}+u" = "exec --no-startup-id bash -c '/home/istipisti113/config/scripts/wrkspc.sh mprev'"; #monitor to monitor
+          "${mod}+i" = "exec --no-startup-id bash -c '/home/istipisti113/config/scripts/wrkspc.sh mnext'";
 
-          "${mod}+Shift+l" = "exec --no-startup-id bash -c '/home/istipisti113/.config/home-manager/scripts/wrkspc.sh movenext'";
-          "${mod}+Shift+h" = "exec --no-startup-id bash -c '/home/istipisti113/.config/home-manager/scripts/wrkspc.sh moveprev'";
-          "${mod}+Shift+u" = "exec --no-startup-id bash -c '/home/istipisti113/.config/home-manager/scripts/wrkspc.sh movemprev'";
-          "${mod}+Shift+i" = "exec --no-startup-id bash -c '/home/istipisti113/.config/home-manager/scripts/wrkspc.sh movemnext'";
+          "${mod}+Shift+l" = "exec --no-startup-id bash -c '/home/istipisti113/config/scripts/wrkspc.sh movenext'";
+          "${mod}+Shift+h" = "exec --no-startup-id bash -c '/home/istipisti113/config/scripts/wrkspc.sh moveprev'";
+          "${mod}+Shift+u" = "exec --no-startup-id bash -c '/home/istipisti113/config/scripts/wrkspc.sh movemprev'";
+          "${mod}+Shift+i" = "exec --no-startup-id bash -c '/home/istipisti113/config/scripts/wrkspc.sh movemnext'";
 
           "${mod}+k" = "focus right";
           "${mod}+j" = "focus left";
@@ -101,6 +101,17 @@ in {
   home.stateVersion = "25.05";
   home.sessionPath = ["$HOME/.cargo/bin/"];
   programs.home-manager.enable = true;
+
+  home.activation.installPackages = lib.mkForce (
+  lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    nixProfileRemove home-manager-path
+    if [[ -e ${config.home.profileDirectory}/manifest.json ]]; then
+      run nix profile install ${config.home.path}
+    else
+      run nix-env -i ${config.home.path}
+    fi
+  ''
+);
 
   home.packages = with pkgs; [
     htop

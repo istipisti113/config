@@ -4,6 +4,7 @@
     home-manager
     neovim
     htop
+    btop
     fortune
     git
     git-credential-manager
@@ -46,7 +47,8 @@
     tree-sitter
     nodejs
     nixd
-    busybox
+    #busybox
+    coreutils
     cargo
     gcc
     clang
@@ -54,5 +56,9 @@
     vscode-langservers-extracted
 
     transmission_4
+
+    openvpn
+
+    lynis
   ];
 }

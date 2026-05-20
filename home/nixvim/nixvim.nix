@@ -106,7 +106,7 @@
     lint = {
       enable = true;
       lintersByFt = {
-        lua = ["luacheck"];
+        #lua = ["luacheck"];
         nix = ["nix"];
         #rust = ["rust-analyzer"];
         #dart = ["flutter-tools"];
