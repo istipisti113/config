@@ -4,3 +4,6 @@ result-*
 
 # Ignore automatically generated direnv output
 .direnv
+
+system/modules/gitlab/*
+system/modules/gitlab/*

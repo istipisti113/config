@@ -9,5 +9,7 @@
     fish
     jdk
     logmein-hamachi
+    gitlab
+    openssl
 	];
 }
