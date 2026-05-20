@@ -27,10 +27,15 @@ in{
       ./hardware-configuration.nix
       ./packages.nix
       ../modules/common.nix
-      ../modules/gitlab.nix
+      ../modules/gitlab/gitlab.nix
     ];
   nix.settings.experimental-features = ["nix-command" "flakes"];
   nix.settings.auto-optimise-store = true;
+
+  boot.kernel.sysctl = {
+    "kernel.kptr_restrict" = 2; # Restrict kernel pointer exposure
+    "net.ipv4.tcp_syncookies" = 1; # Protect against SYN flood attacks
+  };
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -64,7 +69,7 @@ in{
     LC_TIME = "hu_HU.UTF-8";
   };
 
-  # Enable the X11 windowing system.
+  services.jellyfin.enable = true;  # Enable the X11 windowing system.
   # You can disable this if you're only using the Wayland session.
   services.xserver.enable = true;
 
@@ -92,6 +97,11 @@ in{
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
+  security.apparmor.enable = true;
+  security.audit = {
+    enable = true;
+    rules = [ "-a exit,always -F arch=b64 -S execve -C audit!=euid -k privilege_escalation" ];
+  };
   services.pipewire = {
     enable = true;
     alsa.enable = true;
@@ -139,11 +149,17 @@ in{
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
+  services.openssh = {
+    enable = true;
+    settings = {
+      #UseDns = true;
+      PermitRootLogin = "no";
+    };
+  };
 
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 25565 ];
-  networking.firewall.allowedUDPPorts = [ 25565 ];
+  networking.firewall.allowedTCPPorts = [80 25565 443 8096 8096];
+  networking.firewall.allowedUDPPorts = [ 25565 8096 ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 
