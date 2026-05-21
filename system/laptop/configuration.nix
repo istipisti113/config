@@ -5,6 +5,32 @@
 { config, pkgs, lib, ... }:
 
 let
+  safeHardening = {
+    # Memory protections (usually safe)
+    MemoryDenyWriteExecute = true;
+    LockPersonality = true;
+    
+    # Namespace isolation (usually safe)
+    RestrictNamespaces = true;
+    #PrivateTmp = true;
+    
+    # Basic protections
+    ProtectClock = true;
+    ProtectHostname = true;
+    ProtectControlGroups = true;
+    
+    # Device restrictions (usually safe)
+    PrivateDevices = true;
+    ProtectProc = "invisible";
+    ProcSubset = "pid";
+    
+    # SUID restrictions (usually safe)
+    RestrictSUIDSGID = true;
+    
+    # Realtime restrictions (usually safe unless audio/video)
+    RestrictRealtime = true;
+  };
+
   home-manager = builtins.fetchTarball {
     url = "https://github.com/nix-community/home-manager/archive/release-25.11.tar.gz";
     sha256 = "13sahz1mxbk7n67jvz9fi0f85ax7l6s3ffiwa6x0rfrwfwhgj7x3";
@@ -20,8 +46,20 @@ let
     config.allowUnfree = true;
     system = "x86_64-linux";
   };
+  original_services = config.systemd.services; # because of recursion in nix it needs to be copied
+  hardened = lib.mkMerge [
+    (lib.mapAttrs (name: service: {
+      serviceConfig = lib.mapAttrs (k: v: lib.mkOptionDefault v) safeHardening;
+    }) config.systemd.services)
+  ];
 
 in{
+  systemd.services =  {
+    "*" = {
+      serviceConfig = lib.mapAttrs (k: v: lib.mkOptionDefault v) safeHardening;
+    };
+  };
+
   _module.args = {inherit unstable;};
   nix.settings.experimental-features = ["nix-command" "flakes"];
   nix.settings.auto-optimise-store = true;
@@ -307,7 +345,7 @@ in{
   #services.openssh.enable = true;
 
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 8000 22 ];
+  networking.firewall.allowedTCPPorts = [  ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
@@ -322,32 +360,32 @@ in{
 
   programs.adb.enable = true;
 
-  #specialisation = {
-  #  on-the-go.configuration = {
-  #    system.nixos.tags = [ "on-the-go" ];
-  #    hardware.nvidia = {
-  #      prime.offload.enable = lib.mkForce true;
-  #      prime.offload.enableOffloadCmd = lib.mkForce true;
-  #      prime.sync.enable = lib.mkForce false;
-  #    };
-  #  };
-  #  nvidia-offload.configuration = {
-  #    #boot.blacklistedKernelModules = [ "i915" ];
-  #    hardware.nvidia = {
-  #      modesetting.enable =  true;
-  #      nvidiaSettings = true;
-  #      open = false;
-  #      prime = {
-  #        sync.enable = false;
-  #        intelBusId = "PCI:0:2:0";
-  #        nvidiaBusId = "PCI:1:0:0";
-  #        offload = {
-  #          enable = lib.mkForce true; 
-  #          enableOffloadCmd = lib.mkForce true;
-  #        };
-  #      };
-  #    };
-  #    services.xserver.videoDrivers = lib.mkForce [  "nvidia" ]; 
-  #  };
-  #};
+  specialisation = {
+    #on-the-go.configuration = {
+    #  system.nixos.tags = [ "on-the-go" ];
+    #  hardware.nvidia = {
+    #    prime.offload.enable = lib.mkForce true;
+    #    prime.offload.enableOffloadCmd = lib.mkForce true;
+    #    prime.sync.enable = lib.mkForce false;
+    #  };
+    #};
+    nvidia-offload.configuration = {
+      #boot.blacklistedKernelModules = [ "i915" ];
+      hardware.nvidia = {
+        modesetting.enable =  true;
+        nvidiaSettings = true;
+        open = false;
+        prime = {
+          sync.enable = false;
+          intelBusId = "PCI:0:2:0";
+          nvidiaBusId = "PCI:1:0:0";
+          offload = {
+            enable = lib.mkForce true; 
+            enableOffloadCmd = lib.mkForce true;
+          };
+        };
+      };
+      services.xserver.videoDrivers = lib.mkForce [  "nvidia" ]; 
+    };
+  };
 }

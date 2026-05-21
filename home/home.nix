@@ -39,8 +39,8 @@ in {
           "${mod}+p" = "exec --no-startup-id wofi --show drun";
           "${mod}+space+m" = "exec swaymsg exit";
           "${mod}+q" = "kill";
-          "${mod}+Shift+p" = "exec --no-startup-id bash -c '/home/istipisti113/.config/home-manager/scripts/screenshot.sh'";
-          "${mod}+w" = "exec --no-startup-id bash -c '/home/istipisti113/.config/home-manager/scripts/waybar_restart.sh'";
+          "${mod}+Shift+p" = "exec --no-startup-id bash -c '/home/istipisti113/config/home/scripts/screenshot.sh'";
+          "${mod}+w" = "exec --no-startup-id bash -c '/home/istipisti113/config/home/scripts/waybar_restart.sh'";
 
           #movement
           "${mod}+l" = "exec --no-startup-id bash -c '/home/istipisti113/config/scripts/wrkspc.sh next'"; #workspace to workspace
