@@ -51,6 +51,7 @@
     #fuse-overlayfs
     exercism
     SDL2
+    sigdigger
     nfs-utils
 
     wireshark

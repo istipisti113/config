@@ -59,6 +59,7 @@ in{
       serviceConfig = lib.mapAttrs (k: v: lib.mkOptionDefault v) safeHardening;
     };
   };
+  systemd.services.bluetooth.serviceConfig = {};
 
   _module.args = {inherit unstable;};
   nix.settings.experimental-features = ["nix-command" "flakes"];
@@ -121,7 +122,8 @@ in{
   boot.loader.efi.canTouchEfiVariables = true;
   #boot.resumeDevice = "/dev/disk/by-uuid/fcf14eaf-ee88-4a23-838a-5b23386b8187";
   boot.initrd.luks.devices."luks-7ae0038e-0f2c-4655-8a6b-0ca7766005a6".device = "/dev/disk/by-uuid/7ae0038e-0f2c-4655-8a6b-0ca7766005a6";
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  boot.kernelPackages = unstable.pkgs.linuxPackages_latest;
   boot.extraModulePackages =  [
       #(pkgs.linuxPackages_latest.v4l2loopback.overrideAttrs (oldAttrs: {
       #  version = "0.13.2-manual";
@@ -295,15 +297,16 @@ in{
 
   hardware.rtl-sdr.enable = true;
   services.udev.packages = with pkgs; [via oversteer rtl-sdr game-devices-udev-rules];
+  hardware.enableRedistributableFirmware = true;
   hardware.bluetooth = {
     enable = true;
     powerOnBoot = true;
-    settings = {
-      General = {
-        Enable = "Source,Sink,Media,Socket";
-        UserspaceHID = true;
-      }; 
-    };
+      #settings = {
+      #  General = {
+      #    Enable = "Source,Sink,Media,Socket";
+      #    UserspaceHID = true;
+      #  }; 
+      #};
   };
 
   hardware.keyboard.qmk.enable = true;
