@@ -1,4 +1,4 @@
-{config, lib, pkgs, ...}:
+{config, lib, pkgs, nixpkgs, ...}:
 {
   environment.systemPackages = with pkgs; [
     unstable.spotify
@@ -8,7 +8,9 @@
     steam
     #prusa-slicer
     #android-studio
-    wine
+    #wine
+    winetricks
+    wineWowPackages.stable
     lshw
     #discord-screenaudio
     #nvidia-prime
@@ -26,7 +28,6 @@
     beeper
     tmux
     vial
-    #unstable.codecrafters-cli
     #teamviewer
     cargo-generate
     #python3
@@ -50,6 +51,8 @@
 
     #fuse-overlayfs
     exercism
+    unstable.codecrafters-cli
+
     SDL2
     sigdigger
     nfs-utils
@@ -60,5 +63,15 @@
 
     xorg.libX11
     lix
+    #dotnet-runtime_8
+    #dotnet-runtime_9
+    dotnet-runtime_10
+    #dotnet-runtime_10
+
+    vulkan-loader
+    vulkan-tools
+    vulkan-validation-layers
+    dxvk
+    vkd3d-proton
   ];
 }

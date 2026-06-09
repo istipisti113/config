@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 #laptop
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, nixpkgs, ... }:
 
 let
   safeHardening = {
@@ -41,7 +41,7 @@ let
   }) { inherit pkgs; };
   unstable = import (fetchTarball {
     url = "https://github.com/NixOS/nixpkgs/tarball/nixos-unstable";
-    sha256 = "1485vqhb8cwym1m75v61i10j427vazszaklkwj2wmm80k8sijjyz";
+    sha256 = "10zg0da9mswglfq40204s1fh98sgc3rsbj5kvlkp5i5rgwjlm7q2";
   }) {
     config.allowUnfree = true;
     system = "x86_64-linux";
@@ -54,25 +54,29 @@ let
   ];
 
 in{
-  systemd.services =  {
-    "*" = {
-      serviceConfig = lib.mapAttrs (k: v: lib.mkOptionDefault v) safeHardening;
-    };
-  };
-  systemd.services.bluetooth.serviceConfig = {};
+    #systemd.services =  {
+    #  "*" = {
+    #    serviceConfig = lib.mapAttrs (k: v: lib.mkOptionDefault v) safeHardening;
+    #  };
+    #};
+    #systemd.services.bluetooth.serviceConfig = {};
 
   _module.args = {inherit unstable;};
   nix.settings.experimental-features = ["nix-command" "flakes"];
   nix.settings.auto-optimise-store = true;
 
   nix.package = pkgs.lixPackageSets.latest.lix;
+  #nix.settings.allowUnfree = true;
 
   #nixpkgs.overlays = [nurpkgs.overlay];
-  #nixpkgs.overlays = [
-  #  (import ./overlays/beeper.nix)
-  #];
 
   nixpkgs.overlays = [
+      #(final: prev: {
+      #  nvidia_x11 = prev.nvidia_x11.override {
+      #    acceptLicense = true;
+      #  };
+      #})
+
     (self: super: {
       unstable = import unstable.path {
         inherit (super) system config;
@@ -93,7 +97,9 @@ in{
       inherit pkgs;
     };
   };
-
+  nixpkgs.config.permittedInsecurePackages = [
+    "electron-39.8.10"
+  ];
 
   imports = 
     [
@@ -112,6 +118,8 @@ in{
   #home-manager.backupFileExtension = "backup";
 
   #home-manager.users.istipisti113 = import /home/istipisti113/.config/home-manager/home.nix;
+  #nixpkgs.config.allowUnfree = true;
+  #nixpkgs.config.nvidia.acceptLicense = true;
 
   boot.kernel.sysctl = {
     "kernel.kptr_restrict" = 2;
@@ -123,8 +131,9 @@ in{
   #boot.resumeDevice = "/dev/disk/by-uuid/fcf14eaf-ee88-4a23-838a-5b23386b8187";
   boot.initrd.luks.devices."luks-7ae0038e-0f2c-4655-8a6b-0ca7766005a6".device = "/dev/disk/by-uuid/7ae0038e-0f2c-4655-8a6b-0ca7766005a6";
 
-  boot.kernelPackages = unstable.pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.extraModulePackages =  [
+  	pkgs.linuxPackages_latest.v4l2loopback
       #(pkgs.linuxPackages_latest.v4l2loopback.overrideAttrs (oldAttrs: {
       #  version = "0.13.2-manual";
       #  src = pkgs.fetchFromGitHub {
@@ -228,14 +237,14 @@ in{
   security.apparmor.enable = true;
 
   # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
+  #nixpkgs.config.allowUnfree = true;
   #nixpkgs.config.permittedInsecurePackages = [
   #  "ventoy-1.1.05"
   #];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.sessionVariables = { DOTNET_ROOT = "${pkgs.dotnet-sdk}/share/dotnet"; };
+  #environment.sessionVariables = { DOTNET_ROOT = "${pkgs.dotnet-sdk}/share/dotnet"; };
 
   hardware.pulseaudio.enable = false;
   services.pipewire = {
@@ -323,10 +332,10 @@ in{
       sync.enable = false;
       intelBusId = "PCI:0:2:0";
       nvidiaBusId = "PCI:1:0:0";
-        #   offload = {
-        #     enable = true;
-        #     enableOffloadCmd = true;
-        #   };
+      #   offload = {
+      #     enable = true;
+      #     enableOffloadCmd = true;
+      #   };
     };
   };
   services.xserver.videoDrivers = [ "modesetting" "nouveau" ]; 
@@ -362,6 +371,8 @@ in{
   system.stateVersion = "25.11"; # Did you read the comment?
 
   programs.adb.enable = true;
+  nixpkgs.config.allowUnfree = lib.mkOverride 0 true;
+  #nixpkgs.config.nvidia.acceptLicense = lib.mkOverride 0 true;
 
   specialisation = {
     #on-the-go.configuration = {
@@ -373,8 +384,24 @@ in{
     #  };
     #};
     nvidia-offload.configuration = {
+      #nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (nixpkgs.lib.getName pkg) [
+      #  "nvidia-x11"
+      #  "nvidia-settings"
+      #  "nvidia-persistenced"
+      #];
       #boot.blacklistedKernelModules = [ "i915" ];
+      nixpkgs.config.allowUnfree = lib.mkOverride 0 true;
+      #nixpkgs.config.nvidia.acceptLicense = lib.mkOverride 0 true;
+      #nixpkgs.config.allowUnfreePredicate = _: true;
       hardware.nvidia = {
+        package = config.boot.kernelPackages.nvidiaPackages.stable.overrideAttrs (oldAttrs: rec {
+          version = "595.80";
+          src = pkgs.fetchurl {
+            url = "https://download.nvidia.com/XFree86/Linux-x86_64/${version}/NVIDIA-Linux-x86_64-${version}.run";
+            sha256 = "sha256-PVTIP+B/01c/8M66hXTAYTLg9T2Hy9u1gq43K7TF1Hg=";
+          };
+        });
+        #vulkan.enable = true;
         modesetting.enable =  true;
         nvidiaSettings = true;
         open = false;
