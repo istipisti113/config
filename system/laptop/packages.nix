@@ -30,6 +30,7 @@
     vial
     #teamviewer
     cargo-generate
+    steel # rust embeddable sceme language
     #python3
     #wireguard-ui
     #wireguard-tools
@@ -73,5 +74,9 @@
     vulkan-validation-layers
     dxvk
     vkd3d-proton
+
+    picotool
+    feh
+    ffmpeg
   ];
 }

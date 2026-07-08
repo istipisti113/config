@@ -89,7 +89,7 @@
           }
 
           # Disable this if running tests with nix flake check
-          (lib.mkIf helpers.enableExceptInTests { name = "nixpkgs_maintainers"; })
+          #(lib.mkIf helpers.enableExceptInTests { name = "nixpkgs_maintainers"; })
         ];
 
         window = {

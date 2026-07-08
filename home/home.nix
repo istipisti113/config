@@ -1,4 +1,4 @@
-{options, config, pkgs, lib, ... }:
+{options, config, pkgs, lib,nixpkgs,  ... }:
 with lib;
 let 
   mod = "Mod4";
@@ -12,10 +12,12 @@ let
   }) { inherit pkgs; };
   firefox-addons = nur.repos.rycee.firefox-addons;
 in {
+
   # .config/nixpkgs/config.nix!!!!!
   # nur github oldala!
   #nixpkgs.overlays = [ nur.overlay ];
   #sway config
+  nixpkgs.config = { allowBroken = false; allowUnfree = true; };
   home.file."0256.jpg".source = /home/istipisti113/config/home/0256.jpg;
   imports = [nixvim.homeModules.nixvim];
   wayland.windowManager.sway = {
@@ -150,7 +152,7 @@ in {
     popsicle
     usbimager
     #dotnet-sdk
-    dotnet-sdk_9
+    #dotnet-sdk_9
     devbox
     #omnisharp-roslyn
     #python314
@@ -175,7 +177,7 @@ in {
     #newpackage
     cargo-cross #rust cross compile
     tor-browser
-    busybox
+    #busybox
     sdrpp
     speedtest-cli
     element-desktop
@@ -365,7 +367,7 @@ in {
   };
 
   programs.neovim = {
-    enable = true;
+    enable = false;
     extraPackages = with pkgs; [ telescope ripgrep fd ];
     plugins = with pkgs.vimPlugins; [
       nvim-lspconfig

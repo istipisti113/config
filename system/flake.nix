@@ -23,9 +23,7 @@
       #};
     in {
       # Replace "your-hostname" with your actual system's hostname.
-      environment.variables = { EDITOR = "nvim"; VISUAL = "nvim"; 
-
-      };
+      environment.variables = { EDITOR = "nvim"; VISUAL = "nvim";};
       nixosConfigurations = {
         laptop = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
@@ -37,7 +35,7 @@
               environment.systemPackages = [
                 synapse.packages.${pkgs.system}.default
                 raa.packages.${pkgs.system}.default
-                #(rai.packages.${pkgs.system}.default.override secrets)
+                #(raa.packages.${pkgs.system}.default.override secrets)
               ];
               #nixpkgs.pkgs = pkgs;
             })

@@ -35,10 +35,42 @@
       action = "{";
     }
     {
-      key = "<leader>d";
-      lua = true;
-      action = "vim.diagnostic.open_float";
+      key = "<leader>dd";
+      #lua = true;
+      action = lib.nixvim.mkRaw "vim.diagnostic.open_float";
       mode = "n";
+      #description = "Open diagnostic window";
+    }
+
+    {
+      key = "<leader>dj";
+      action = lib.nixvim.mkRaw "vim.diagnostic.goto_next";
+      mode = "n";
+      #description = "Open next diagnostic";
+      #options = {
+      #buffer = 0,
+      #desc = "Go to next [d]iagnostic with LSP",
+      #},
+    }
+
+    {
+      key = "<leader>dk";
+      action = lib.nixvim.mkRaw "vim.diagnostic.goto_prev";
+      mode = "n";
+      #description = "Open previous diagnostic";
+      #options = {
+      #  buffer = 0,
+      #  desc = "Go to previous [d]iagnostic with LSP",
+      #};
+    }
+    {
+      key = "<leader>r";
+      action = lib.nixvim.mkRaw "vim.lsp.buf.rename";
+      mode = "n";
+      #options = {
+      #  buffer = 0,
+      #    desc = "[r]ename variable with LSP",
+      #      },
     }
   ];
   colorschemes.tokyonight.enable = true;
@@ -97,7 +129,11 @@
         installCargo = true;
         installRustc = true;
         settings.checkOnSave = true;
+        #cargo.unsetTest = [ "tokio" "tokio-macros" ];
       };
+
+      scheme_langserver.enable = true;
+
       lua_ls.enable = true;
       lua_ls.autostart = true;
       nixd.enable = true;
@@ -158,30 +194,6 @@
           desc = "[g]o to [i]mplementation with LSP",
         },
       },
-      {
-        key = "<leader>dj",
-        action = vim.diagnostic.goto_next,
-        options = {
-          buffer = 0,
-          desc = "Go to next [d]iagnostic with LSP",
-        },
-      },
-      {
-        key = "<leader>dk",
-        action = vim.diagnostic.goto_prev,
-        options = {
-          buffer = 0,
-          desc = "Go to previous [d]iagnostic with LSP",
-        },
-      },
-      {
-        key = "<leader>r",
-        action = vim.lsp.buf.rename,
-        options = {
-          buffer = 0,
-          desc = "[r]ename variable with LSP",
-        },
-      },
     }
     for _, bind in ipairs(lsp_keybinds) do
       vim.keymap.set("n", bind.key, bind.action, bind.options)
@@ -204,24 +216,24 @@
 
 
   -- Rust LSP
---;  require("lspconfig").rust_analyzer.setup({
---;    root_dir = function(fname)
---;      return vim.loop.cwd()
---;    end,
---;    settings = {
---;      ['rust-analyzer'] = {
---;        diagnostics = {
---;          disabled = { "unresolved-proc-macro", "unresolved-macro-call" },
---;        },
---;        cargo = {
---;          allFeatures = true,
---;        },
---;      },
---;    },
---;    on_attach = function()
---;      set_cmn_lsp_keybinds()
---;    end,
---;  })
+  --;  require("lspconfig").rust_analyzer.setup({
+  --;    root_dir = function(fname)
+  --;      return vim.loop.cwd()
+  --;    end,
+  --;    settings = {
+  --;      ['rust-analyzer'] = {
+  --;        diagnostics = {
+  --;          disabled = { "unresolved-proc-macro", "unresolved-macro-call" },
+  --;        },
+  --;        cargo = {
+  --;          allFeatures = true,
+  --;        },
+  --;      },
+  --;    },
+  --;    on_attach = function()
+  --;      set_cmn_lsp_keybinds()
+  --;    end,
+  --;  })
   --require("lspconfig").ts_ls.setup{
   --on_attach = function(client, bufnr)
   --  -- optional: keymaps, etc.
