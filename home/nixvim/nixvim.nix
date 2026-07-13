@@ -1,4 +1,17 @@
 {options, config, pkgs, lib, ... }:
+let 
+  nixvim_binary_runner = pkgs.vimUtils.buildVimPlugin{
+    pname = "nixvim_binary_runner";
+    version = "0.1.0";
+    src = /home/istipisti113/program/nix/nixvim_binary_runner;
+    #src = pkgs.fetchFromGitHub {
+    #  owner = "istipisti113";
+    #  repo = "nixvim_binary_runner";
+    #  rev = "e123c54ef7ab1c29058c0e9ae41340781be88841";
+    #  hash = "sha256-+QP8mUd5w5Aw4nJtQCjV7nPHs5Z2UP648k17J5sM+zI=";
+    #};
+  };
+in
 {
   globals.mapleader = " ";
   imports = [
@@ -72,11 +85,30 @@
       #    desc = "[r]ename variable with LSP",
       #      },
     }
+
+    {
+      key = "<leader>bl";
+      action = ":bnext<CR>";
+      mode = "n";
+    }
+
+    {
+      key = "<leader>bh";
+      action = ":bprev<CR>";
+      mode = "n";
+    }
+    {
+      key = "<C-g>";
+      action = "<C-\\><C-n>";
+      mode = "t";
+    }
   ];
+
   colorschemes.tokyonight.enable = true;
   colorschemes.catppuccin.enable = false;
 
   plugins = {
+    #binary_runner.enable = true;
     autoclose.enable = true;
     flutter-tools.enable = false;
     fugitive.enable = true;
@@ -150,14 +182,17 @@
     };
   };
 
-  extraPlugins = with pkgs.vimPlugins; [
-    nvim-lspconfig
+  extraPlugins =  [
+    pkgs.vimPlugins.nvim-lspconfig
+    nixvim_binary_runner
     #flutter-tools-nvim
   ];
   extraPackages = with pkgs; [
     #typescript-language-server
   ];
   extraConfigLua = ''
+    require("nixvim_binary_runner").setup({});
+
 
   vim.keymap.set("n", "<esc>", ":noh<CR>")
   local function set_cmn_lsp_keybinds()
