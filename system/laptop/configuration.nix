@@ -249,7 +249,7 @@ in{
   hardware.pulseaudio.enable = false;
   services.pipewire = {
     enable = true;
-    alsa.enable = true;
+    alsa.enable = false;
     pulse.enable = true;
     wireplumber.enable = true;
   };
@@ -263,6 +263,8 @@ in{
   services.tailscale.enable = true;
   services.tailscale.package = unstable.tailscale;
   services.mullvad-vpn.enable = true;
+
+  services.flatpak.enable = true;
 
   programs.nix-ld.enable = true;
   programs.nix-ld.libraries = with pkgs; [

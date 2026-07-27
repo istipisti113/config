@@ -78,5 +78,18 @@
     picotool
     feh
     ffmpeg
+    ripgrep
+    github-cli
+    keet
+    nload
+
+    gtk4
+    gtk4-layer-shell
+    pkg-config
+    glib
+    pango
+    
+    openscad
+    openscad-lsp
   ];
 }

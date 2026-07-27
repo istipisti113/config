@@ -316,6 +316,9 @@ in {
           }
         },
         '';
+        clock = {
+          on-click = "";
+        };
         backlight = {
           format = "󰃞 {percent}%";
           on-scroll-up = "brightnessctl s 1%+";

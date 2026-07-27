@@ -1,9 +1,9 @@
 {options, config, pkgs, lib, ... }:
 let 
-  nixvim_binary_runner = pkgs.vimUtils.buildVimPlugin{
-    pname = "nixvim_binary_runner";
+  nvim_prelude = pkgs.vimUtils.buildVimPlugin{
+    pname = "nvim_prelude";
     version = "0.1.0";
-    src = /home/istipisti113/program/nix/nixvim_binary_runner;
+    src = /home/istipisti113/program/nix/nvim_prelude;
     #src = pkgs.fetchFromGitHub {
     #  owner = "istipisti113";
     #  repo = "nixvim_binary_runner";
@@ -102,13 +102,19 @@ in
       action = "<C-\\><C-n>";
       mode = "t";
     }
+    {
+      key = "U";
+      action = ":redo<CR>";
+      mode = "n";
+    }
   ];
 
   colorschemes.tokyonight.enable = true;
   colorschemes.catppuccin.enable = false;
 
   plugins = {
-    #binary_runner.enable = true;
+    leetcode.enable = true;
+    lazydev.enable = true;
     autoclose.enable = true;
     flutter-tools.enable = false;
     fugitive.enable = true;
@@ -135,6 +141,18 @@ in
         "<leader>to" = {
           action = "oldfiles";
           options.desc = "find hidden files";
+        };
+        "<leader>tgc" = {
+          action = "git_commits";
+          options.desc = "checkout git commits";
+        };
+        "<leader>th" = {
+          action = "help_tags";
+          options.desc = "nvim help tags";
+        };
+        "<leader>tt" = {
+          action = "current_buffer_fuzzy_find";
+          options.desc = "fuzzy find in the current buffer";
         };
       };
     };
@@ -184,14 +202,17 @@ in
 
   extraPlugins =  [
     pkgs.vimPlugins.nvim-lspconfig
-    nixvim_binary_runner
+    nvim_prelude
     #flutter-tools-nvim
   ];
   extraPackages = with pkgs; [
     #typescript-language-server
   ];
   extraConfigLua = ''
-    require("nixvim_binary_runner").setup({});
+    require("nvim_prelude").setup({
+      ["Steel"]="steel",
+      ["Raa"]="rust-ai-assistant",
+    });
 
 
   vim.keymap.set("n", "<esc>", ":noh<CR>")
