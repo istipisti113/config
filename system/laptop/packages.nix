@@ -14,6 +14,13 @@
     lshw
     #discord-screenaudio
     #nvidia-prime
+    #go_1_26
+    #(pkgs.discordo.override {
+    #  buildGoModule = pkgs.buildGoModule.override {
+    #    go = pkgs.go_1_26;
+    #  };
+    #})
+
     #nvidia-x11
     #nvidia-settings
     #nvidia-persistenced
@@ -31,14 +38,14 @@
     #teamviewer
     cargo-generate
     steel # rust embeddable sceme language
-    #python3
+    python3
     #wireguard-ui
     #wireguard-tools
+    tree
 
     libusb1
     rtl-sdr
     gqrx
-    #ventoy
     pix
     direnv
 
@@ -83,13 +90,32 @@
     keet
     nload
 
-    gtk4
-    gtk4-layer-shell
-    pkg-config
-    glib
-    pango
+    #gtk4
+    #gtk4-layer-shell
+    #pkg-config
+    #glib
+    #glib.dev
+    #gobject-introspection
+    #cairo
+    #pango
     
     openscad
     openscad-lsp
+
+    doctoc
+    vscode
+    inkscape
+
+    inetutils #telnet for connecting to the mks tinybee
+    websocat
+    esptool
+
+    pv #progress bar
+    openssl.dev
+    openssl
+
+    woeusb
+    ntfs3g
+    ventoy
   ];
 }

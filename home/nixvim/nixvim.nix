@@ -11,6 +11,16 @@ let
     #  hash = "sha256-+QP8mUd5w5Aw4nJtQCjV7nPHs5Z2UP648k17J5sM+zI=";
     #};
   };
+  naysayer = pkgs.vimUtils.buildVimPlugin {
+    name = "naysayer";
+    src = pkgs.fetchFromGitHub {
+      owner = "RostislavArts";
+      repo = "naysayer.nvim";
+      rev = "main";
+      sha256 = "sha256-aU571SO6w+0LeFibTzAYSFlGB/L87rrRV12hPtfiPoY=";
+    };
+  };
+
 in
 {
   globals.mapleader = " ";
@@ -109,7 +119,12 @@ in
     }
   ];
 
-  colorschemes.tokyonight.enable = true;
+  colorschemes.tokyonight = {
+    enable = true;
+    settings = {
+      style = "night";
+    };
+  };
   colorschemes.catppuccin.enable = false;
 
   plugins = {
@@ -134,6 +149,10 @@ in
           action = "find_files";
           options.desc = "find files";
         };
+        "<leader>tg" = {
+          action = "live_grep";
+          options.desc = "find a text in a directory of files";
+        };
         "<leader>tF" = {
           action = "find_files";
           options.desc = "find hidden files";
@@ -142,7 +161,7 @@ in
           action = "oldfiles";
           options.desc = "find hidden files";
         };
-        "<leader>tgc" = {
+        "<leader>tc" = {
           action = "git_commits";
           options.desc = "checkout git commits";
         };
@@ -167,6 +186,8 @@ in
     lsp.enable = true;
 
     lsp.servers = {
+      clangd.enable = true;
+      ts_ls.enable = true;
       emmet_ls = {
         enable = true;
       };
@@ -178,7 +199,10 @@ in
         autostart = true;
         installCargo = true;
         installRustc = true;
-        settings.checkOnSave = true;
+        settings = {
+          checkOnSave = true;
+          diagnostics.disabled = ["inactive-code"];
+        };
         #cargo.unsetTest = [ "tokio" "tokio-macros" ];
       };
 
@@ -203,6 +227,7 @@ in
   extraPlugins =  [
     pkgs.vimPlugins.nvim-lspconfig
     nvim_prelude
+    naysayer
     #flutter-tools-nvim
   ];
   extraPackages = with pkgs; [

@@ -99,6 +99,7 @@ in{
   };
   nixpkgs.config.permittedInsecurePackages = [
     "electron-39.8.10"
+    "ventoy-1.1.10"
   ];
 
   imports = 
@@ -118,6 +119,7 @@ in{
   #home-manager.backupFileExtension = "backup";
 
   #home-manager.users.istipisti113 = import /home/istipisti113/.config/home-manager/home.nix;
+  #nixpkgs.config.allowUnfree = true;
   #nixpkgs.config.allowUnfree = true;
   #nixpkgs.config.nvidia.acceptLicense = true;
 
@@ -233,14 +235,10 @@ in{
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   security.sudo.enable = true;
-  security.sudo.wheelNeedsPassword = true;
   security.apparmor.enable = true;
 
   # Allow unfree packages
   #nixpkgs.config.allowUnfree = true;
-  #nixpkgs.config.permittedInsecurePackages = [
-  #  "ventoy-1.1.05"
-  #];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -249,7 +247,7 @@ in{
   hardware.pulseaudio.enable = false;
   services.pipewire = {
     enable = true;
-    alsa.enable = false;
+    alsa.enable = true;
     pulse.enable = true;
     wireplumber.enable = true;
   };

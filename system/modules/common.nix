@@ -60,5 +60,7 @@
     openvpn
 
     lynis
+
+    aria2
   ];
 }

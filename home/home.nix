@@ -31,8 +31,10 @@ in {
       terminal = "alacritty";
       menu = "wofi --show drun";
       bars = [];
-      input."*".xkb_layout = "us";
-      input."65251:0:Thomas_Haukland_cheapino2_Keyboard".xkb_layout = "us";
+      #input."*".xkb_layout = "hu";
+      #input."65251:0:Thomas_Haukland_Cheapino2_Keyboard".xkb_layout = "us";
+      input."1:1:AT_Translated_Set_2_keyboard".xkb_layout = "hu";
+      input."*Cheapino*".xkb_layout = "us";
       keybindings = lib.attrsets.mergeAttrsList  [
         #(lib.attrsets.mergeAttrsList)
         {
@@ -58,11 +60,11 @@ in {
           "${mod}+k" = "focus right";
           "${mod}+j" = "focus left";
 
-          "${mod}+space" = "exec --no-startup-id bash -c 'playerctl --player=spotify play-pause'";
-          "${mod}+right" = "exec --no-startup-id bash -c 'playerctl --player=spotify next'";
-          "${mod}+left" = "exec --no-startup-id bash -c 'playerctl --player=spotify previous'";
-          "${mod}+up" = "exec --no-startup-id bash -c 'playerctl --player=spotify volume 0.1+'";
-          "${mod}+down" = "exec --no-startup-id bash -c 'playerctl --player=spotify volume 0.1-'";
+          "${mod}+space" = "exec --no-startup-id bash -c 'playerctl -p spotatui,spotify play-pause'";
+          "${mod}+right" = "exec --no-startup-id bash -c 'playerctl -p spotatui,spotify next'";
+          "${mod}+left" = "exec --no-startup-id bash -c 'playerctl -p spotatui,spotify previous'";
+          "${mod}+up" = "exec --no-startup-id bash -c 'playerctl -p spotatui,spotify volume 0.1+'";
+          "${mod}+down" = "exec --no-startup-id bash -c 'playerctl -p spotatui,spotify volume 0.1-'";
         }
       ];
       output = {
@@ -94,7 +96,7 @@ in {
         { workspace = "5"; output = "eDP-1"; }
       ];
     };
-    extraConfig = "workspace 1 output eDP-1\nworkspace 2 output eDP-1\nworkspace 6 output HDMI-A-1\nworkspace 7 output HDMI-A-1\ndefault_border pixel 2";
+    extraConfig = "workspace 1 output eDP-1\nworkspace 2 output eDP-1\nworkspace 6 output HDMI-A-1\nworkspace 7 output HDMI-A-1\ndefault_border pixel 2\nfor_window [app_id=\"calendar\"] floating enable, resize set width 300px height 220px, move position 810 0";
   };
 
 
@@ -187,8 +189,16 @@ in {
 
   programs.zoxide.enable = true;
 
+  programs.alacritty = {
+    enable = true;
+    settings.font.size = 18;
+  };
+
   programs.fish = {
     enable = true;
+    shellAliases = {
+      hl = "rg --passthru";
+    };
     interactiveShellInit = ''
       zoxide init fish | source
     '';
@@ -317,7 +327,7 @@ in {
         },
         '';
         clock = {
-          on-click = "";
+          on-click = "bash /home/istipisti113/program/bash/calfloat/calfloat.sh";
         };
         backlight = {
           format = "󰃞 {percent}%";
@@ -335,12 +345,12 @@ in {
         };
         "custom/spotify" = {
           "format" = "♫ {}";
-          "exec" = "playerctl -p spotify metadata --format '{{artist}} - {{title}}'";
-          "exec-if" = "playerctl -p spotify status 2>/dev/null || echo 'false'";
+          "exec" = "playerctl -p spotatui metadata --format '{{artist}} - {{title}}'";
+          "exec-if" = "playerctl -p spotatui status 2>/dev/null || echo 'false'";
           "interval" = 5;
-          "on-click" = "playerctl -p spotify play-pause";
-          "on-click-right" = "playerctl -p spotify next";
-          "on-scroll-up" = "playerctl -p spotify previous";
+          "on-click" = "playerctl -p spotatui play-pause";
+          "on-click-right" = "playerctl -p spotatui next";
+          "on-scroll-up" = "playerctl -p spotatui previous";
           "escape" = true;
           "max-length" = 50;
           "tooltip" = false;
