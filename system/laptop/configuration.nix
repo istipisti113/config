@@ -41,7 +41,8 @@ let
   }) { inherit pkgs; };
   unstable = import (fetchTarball {
     url = "https://github.com/NixOS/nixpkgs/tarball/nixos-unstable";
-    sha256 = "10zg0da9mswglfq40204s1fh98sgc3rsbj5kvlkp5i5rgwjlm7q2";
+    sha256 = "1ckpy9lka9yis766ybpjkqd5fwf1bpd1y24fw8p9ga976fh177yf";
+
   }) {
     config.allowUnfree = true;
     system = "x86_64-linux";
@@ -105,6 +106,7 @@ in{
   imports = 
     [
       #(import "${home-manager}/nixos")
+      #inputs.net-merge.nixosModules.default
       ./hardware-configuration.nix
       ./packages.nix
       ../modules/common.nix
@@ -182,7 +184,11 @@ in{
 
   # Enable networking
   networking.networkmanager.enable = true;
-  networking.firewall.rejectPackets = true;
+  networking.firewall = {
+    rejectPackets = true;
+  };
+
+  networking.nameservers = [ "1.1.1.1" "8.8.8.8" ];
 
   # Set your time zone.
   time.timeZone = "Europe/Budapest";
@@ -255,7 +261,7 @@ in{
   fonts.packages = [
     pkgs.nerd-fonts.jetbrains-mono
   ];
-  #services.teamviewer.enable = true;
+  services.teamviewer.enable = true;
 
   services.logmein-hamachi.enable = true;
   services.tailscale.enable = true;
@@ -268,7 +274,11 @@ in{
   programs.nix-ld.libraries = with pkgs; [
     xorg.libX11
     libGL
+    libxml2
+    zlib
+    stdenv.cc.cc.lib
   ];
+
 
   programs.steam = {
     enable = true;
@@ -383,6 +393,19 @@ in{
     #    prime.sync.enable = lib.mkForce false;
     #  };
     #};
+    net-merge.configuration = {
+      programs.net-merge = {
+        enable = true;
+        autostart = true;
+      };
+      networking.networkmanager.enable = true;
+      networking.firewall = {
+        #rejectPackets = true;
+        checkReversePath = false; #net-merge
+        trustedInterfaces = [ "net-merge" ];
+      };
+    };
+
     nvidia-offload.configuration = {
       #nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (nixpkgs.lib.getName pkg) [
       #  "nvidia-x11"

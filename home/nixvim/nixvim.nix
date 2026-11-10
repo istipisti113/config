@@ -57,6 +57,21 @@ in
       key = "}";
       action = "{";
     }
+
+    {
+      key = "<leader>m";
+      mode = "n";
+      options = {
+        desc = "jump to mark";
+      };
+      action.__raw = ''
+        function()
+          --local letter = vim.fn.nr2char(vim.fn.getchar())
+          local letter = vim.fn.input("Mark: ")
+          vim.cmd("normal! '"..letter)
+        end
+      '';
+    }
     {
       key = "<leader>dd";
       #lua = true;
@@ -94,6 +109,11 @@ in
       #  buffer = 0,
       #    desc = "[r]ename variable with LSP",
       #      },
+    }
+    {
+      key = "gd";
+      action = lib.nixvim.mkRaw "vim.lsp.buf.definition";
+      mode = "n";
     }
 
     {
@@ -281,19 +301,56 @@ in
     end
   end
 
-  vim.lsp.config("rust-analyzer", {
-    cmd = {"rust-analyzer"},
-    root_markers = {"Cargo.toml"},
-    filetypes = {"rust"},
-    settings = {
-      diagnostics = {
-        disabled = { "unresolved-proc-macro", "unresolved-macro-call" },
+    vim.lsp.config("rust-analyzer", {
+      --cmd = {"rust-analyzer"},
+      root_markers = {"Cargo.toml"},
+      filetypes = {"rust"},
+      settings = {
+        diagnostics = {
+          disabled = { "unresolved-proc-macro", "unresolved-macro-call" },
+        },
+        cargo = {
+          loadOutDirsFromCheck = true,
+          allFeatures = true,
+          --extraArgs = {"--target", "xtensa-esp32-none-elf"},
+        },
       },
-      cargo = {
-        allFeatures = true,
-      },
-    }
-  })
+      on_attach = function()
+        set_cmn_lsp_keybinds()
+      end,
+    })
+
+    --vim.api.nvim_create_autocmd("FileType", {
+    --  pattern = "rust",
+    --  callback = function()
+    --    local cwd = vim.fn.getcwd()
+    --    if cwd:match("esp_projects") or vim.fn.filereadable(cwd .. "/.cargo/config.toml") == 1 then
+    --      local esp_rustc = vim.fn.expand("$HOME/.rustup/toolchains/esp/bin/rustc")
+    --      if vim.fn.executable(esp_rustc) == 1 then
+    --        require('lspconfig').rust_analyzer.setup({
+    --          settings = {
+    --            ['rust-analyzer'] = {
+    --              cargo = {
+    --                loadOutDirsFromCheck = true,
+    --              },
+    --              server = {
+    --                extraEnv = {
+    --                  --RUSTC = esp_rustc,
+    --                  RUSTC = vim.env.RUSTC,
+    --                  CARGO = vim.env.CARGO,
+    --                },
+    --              },
+    --            },
+    --          },
+    --        })
+    --        -- Restart active clients safely using Lua
+    --        for _, client in ipairs(vim.lsp.get_clients({ name = "rust_analyzer" })) do
+    --          client.stop()
+    --        end
+    --      end
+    --    end
+    --  end,
+    --})
 
 
   -- Rust LSP
@@ -335,5 +392,7 @@ in
     },
   })
   vim.lsp.enable("cssls")
+
+  vim.o.exrc = true
   '';
 }

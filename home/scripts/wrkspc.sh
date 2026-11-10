@@ -8,16 +8,32 @@ wom=5
 if [[ $CURWIND == "eDP-1" ]]; then
   if [[ "$1" == "mnext" ]]; then 
     swaymsg workspace $(swaymsg -t get_workspaces | jq -r '.[] | select(.visible and .output=="HDMI-A-1") | "\(.name)"')
+  elif [[ "$1" == "mprev" ]]; then 
+    swaymsg workspace $(swaymsg -t get_workspaces | jq -r '.[] | select(.visible and .output=="DP-1") | "\(.name)"')
 #moving
   elif [[ "$1" == "movemnext" ]];then
     swaymsg move container to workspace $(swaymsg -t get_workspaces | jq -r '.[] | select(.visible and .output=="HDMI-A-1") | "\(.name)"')
     swaymsg workspace $(swaymsg -t get_workspaces | jq -r '.[] | select(.visible and .output=="HDMI-A-1") | "\(.name)"')
+  elif [[ "$1" == "movemprev" ]];then
+    swaymsg move container to workspace $(swaymsg -t get_workspaces | jq -r '.[] | select(.visible and .output=="DP-1") | "\(.name)"')
+    swaymsg workspace $(swaymsg -t get_workspaces | jq -r '.[] | select(.visible and .output=="DP-1") | "\(.name)"')
   fi
+
 elif [[ $CURWIND == "HDMI-A-1" ]]; then
   if [[ "$1" == "mprev" ]]; then 
     swaymsg workspace $(swaymsg -t get_workspaces | jq -r '.[] | select(.visible and .output=="eDP-1") | "\(.name)"')
 #moving
   elif [[ "$1" == "movemprev" ]]; then 
+    swaymsg move container to workspace $(swaymsg -t get_workspaces | jq -r '.[] | select(.visible and .output=="eDP-1") | "\(.name)"')
+    swaymsg workspace $(swaymsg -t get_workspaces | jq -r '.[] | select(.visible and .output=="eDP-1") | "\(.name)"')
+  fi
+
+
+elif [[ $CURWIND == "DP-1" ]]; then
+  if [[ "$1" == "mnext" ]]; then 
+    swaymsg workspace $(swaymsg -t get_workspaces | jq -r '.[] | select(.visible and .output=="eDP-1") | "\(.name)"')
+#moving
+  elif [[ "$1" == "movemnext" ]]; then 
     swaymsg move container to workspace $(swaymsg -t get_workspaces | jq -r '.[] | select(.visible and .output=="eDP-1") | "\(.name)"')
     swaymsg workspace $(swaymsg -t get_workspaces | jq -r '.[] | select(.visible and .output=="eDP-1") | "\(.name)"')
   fi

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Categories=
+Comment=A Tauri App
+Exec=elso_teszt
+StartupWMClass=elso_teszt
+Icon=elso_teszt
+Name=elso-teszt
+Terminal=false
+Type=Application

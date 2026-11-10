@@ -4,6 +4,7 @@
   inputs = {
     # Use the stable branch that matches your system's stateVersion.
     # Find this in your configuration.nix (e.g., "24.11").
+    net-merge.url = "github:rohit267/net-merge";
     spotatui = {
       url = "github:LargeModGames/spotatui";
       #url = "github:istipisti113/spotatui/TokyoNightColorScheme"; #testing before merge
@@ -16,7 +17,7 @@
     #colibri.url = "github:JustVugg/colibri";
   };
 
-  outputs = { self, nixpkgs, synapse, raa, coderabbit, ... }@inputs:
+  outputs = { self, nixpkgs, synapse, raa, coderabbit, net-merge, ... }@inputs:
     let 
       lib = nixpkgs.lib;
       apiKeyFile = /home/istipisti113/config/variables/vars.json;
@@ -32,6 +33,7 @@
       # Replace "your-hostname" with your actual system's hostname.
       environment.variables = { EDITOR = "nvim"; VISUAL = "nvim";};
       nixosConfigurations = {
+
         laptop = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
@@ -39,6 +41,7 @@
             # Import your existing configuration file.
             ({config, pkgs, nixpkgs, ...}:{
               #nixpkgs.config = { allowBroken = lib.mkForce true; allowUnfree = lib.mkForce true;nvidia.acceptLicense = lib.mkForce true; };
+              imports = [ inputs.net-merge.nixosModules.default];
               environment.systemPackages = [
                 synapse.packages.${pkgs.system}.default
                 raa.packages.${pkgs.system}.default
@@ -52,6 +55,7 @@
             ./laptop/configuration.nix
           ];
         };
+
         asztali = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [

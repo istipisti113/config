@@ -3,15 +3,17 @@
   environment.systemPackages = with pkgs; [
     unstable.spotify
     playerctl
-    #obsidian
+    obsidian
     jq
     steam
     #prusa-slicer
     #android-studio
     #wine
     winetricks
+    protontricks
     wineWowPackages.stable
     lshw
+    nnn
     #discord-screenaudio
     #nvidia-prime
     #go_1_26
@@ -20,6 +22,7 @@
     #    go = pkgs.go_1_26;
     #  };
     #})
+    vlc
 
     #nvidia-x11
     #nvidia-settings
@@ -35,10 +38,10 @@
     beeper
     tmux
     vial
-    #teamviewer
+    teamviewer
     cargo-generate
     steel # rust embeddable sceme language
-    python3
+    #python3
     #wireguard-ui
     #wireguard-tools
     tree
@@ -92,7 +95,7 @@
 
     #gtk4
     #gtk4-layer-shell
-    #pkg-config
+    pkg-config
     #glib
     #glib.dev
     #gobject-introspection
@@ -117,5 +120,15 @@
     woeusb
     ntfs3g
     ventoy
+
+    bruno
+    (pkgs.callPackage ./tauri-bitlingo.nix { })
+    gtk3
+    webkitgtk_4_1
+    glib
+
+    patchelf
+    dust
+    kiwix
   ];
 }

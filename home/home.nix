@@ -40,6 +40,7 @@ in {
         {
           "${mod}+Return" = "exec --no-startup-id alacritty";
           "${mod}+f" = "fullscreen toggle";
+          "${mod}+Shift+f" = "floating toggle";
           "${mod}+p" = "exec --no-startup-id wofi --show drun";
           "${mod}+space+m" = "exec swaymsg exit";
           "${mod}+q" = "kill";
@@ -67,21 +68,24 @@ in {
           "${mod}+down" = "exec --no-startup-id bash -c 'playerctl -p spotatui,spotify volume 0.1-'";
         }
       ];
+
       output = {
+        DP-1 = {
+          scale = "1";
+          mode = "1280x1024@50Hz";
+          position = "0 0";
+          transform = "270";
+        };
         eDP-1 = {
           scale = "1";
-          position = "0 0";
+          position = "1280 0";
         };
         HDMI-A-1 = {
           scale = "1";
-          position = "1920 0";
-        };
-        DP-1 = {
-          scale = "1";
-          position = "-1280 0";
-          transform = "90";
+          position = "3200 0"; # 1920+1280
         };
       };
+
       workspaceOutputAssign = [
         { workspace = "6"; output = "HDMI-A-1"; }
         { workspace = "7"; output = "HDMI-A-1"; }
@@ -94,9 +98,15 @@ in {
         { workspace = "3"; output = "eDP-1"; }
         { workspace = "4"; output = "eDP-1"; }
         { workspace = "5"; output = "eDP-1"; }
+
+        { workspace = "11"; output = "DP-1"; }
+        { workspace = "12"; output = "DP-1"; }
+        { workspace = "13"; output = "DP-1"; }
+        { workspace = "14"; output = "DP-1"; }
+        { workspace = "15"; output = "DP-1"; }
       ];
     };
-    extraConfig = "workspace 1 output eDP-1\nworkspace 2 output eDP-1\nworkspace 6 output HDMI-A-1\nworkspace 7 output HDMI-A-1\ndefault_border pixel 2\nfor_window [app_id=\"calendar\"] floating enable, resize set width 300px height 220px, move position 810 0";
+    extraConfig = "workspace 1 output eDP-1\nworkspace 2 output eDP-1\nworkspace 11 output DP-1\nworkspace 12 output DP-1\nworkspace 6 output HDMI-A-1\nworkspace 7 output HDMI-A-1\ndefault_border pixel 2\nfor_window [app_id=\"calendar\"] floating enable, resize set width 300px height 220px, move position 810 0";
   };
 
 
@@ -168,7 +178,6 @@ in {
     swappy
     appimage-run
     unrar-free
-    winetricks
     blender
     libreoffice
     lsd
@@ -200,6 +209,7 @@ in {
       hl = "rg --passthru";
     };
     interactiveShellInit = ''
+      fish_config theme choose "fish default"
       zoxide init fish | source
     '';
   };
@@ -264,6 +274,10 @@ in {
   programs.git = {
     enable = true;
     settings = {
+      safe.directory = [
+        "/nix/store/yihzp3ng29qqqzdszwdxx9a4zgagyqdm-esp-idf-v5.1.3"
+        "/nix/store/yihzp3ng29qqqzdszwdxx9a4zgagyqdm-esp-idf-v5.1.3/*"
+      ];
       user.name = "Szabo Istvan";
       user.email = "pisti4395@gmail.com";
 
