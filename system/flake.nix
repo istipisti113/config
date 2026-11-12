@@ -11,7 +11,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     #coderabbit.url = "github:tienedev/coderabbit-nix";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     #synapse.url = "github:istipisti113/synapse";
     #raa.url = "github:istipisti113/rust_ai_assistant";
     #colibri.url = "github:JustVugg/colibri";
