@@ -4,10 +4,12 @@ let
   mod = "Mod4";
   nixvim = import (builtins.fetchGit {
     url = "https://github.com/nix-community/nixvim";
+    rev = "453dc9c5037e6d1bec81d2a51ddacd58a2f44e9c";
     # When using a different channel you can use `ref = "nixos-<version>"` to set it here
   });
   nur = import (builtins.fetchTarball {
     url = "https://github.com/nix-community/NUR/archive/main.tar.gz";
+    sha256 = "1f5v2m0cqcfi9wzfp8cljqxigkpya1679irdkczgqclg2viy00qd";
     #pin with sha256 for less frequent downloads
   }) { inherit pkgs; };
   firefox-addons = nur.repos.rycee.firefox-addons;
@@ -78,35 +80,35 @@ in {
         };
         eDP-1 = {
           scale = "1";
-          position = "1280 0";
+          position = "1024 0";
         };
         HDMI-A-1 = {
           scale = "1";
-          position = "3200 0"; # 1920+1280
+          position = "2944 0"; # 1920+1024
         };
       };
 
       workspaceOutputAssign = [
-        { workspace = "6"; output = "HDMI-A-1"; }
-        { workspace = "7"; output = "HDMI-A-1"; }
-        { workspace = "8"; output = "HDMI-A-1"; }
-        { workspace = "9"; output = "HDMI-A-1"; }
-        { workspace = "10"; output = "HDMI-A-1"; }
+        { workspace = "11"; output = "HDMI-A-1"; }
+        { workspace = "12"; output = "HDMI-A-1"; }
+        { workspace = "13"; output = "HDMI-A-1"; }
+        { workspace = "14"; output = "HDMI-A-1"; }
+        { workspace = "15"; output = "HDMI-A-1"; }
 
-        { workspace = "1"; output = "eDP-1"; }
-        { workspace = "2"; output = "eDP-1"; }
-        { workspace = "3"; output = "eDP-1"; }
-        { workspace = "4"; output = "eDP-1"; }
-        { workspace = "5"; output = "eDP-1"; }
+        { workspace = "6"; output = "eDP-1"; }
+        { workspace = "7"; output = "eDP-1"; }
+        { workspace = "8"; output = "eDP-1"; }
+        { workspace = "9"; output = "eDP-1"; }
+        { workspace = "10"; output = "eDP-1"; }
 
-        { workspace = "11"; output = "DP-1"; }
-        { workspace = "12"; output = "DP-1"; }
-        { workspace = "13"; output = "DP-1"; }
-        { workspace = "14"; output = "DP-1"; }
-        { workspace = "15"; output = "DP-1"; }
+        { workspace = "1"; output = "DP-1"; }
+        { workspace = "2"; output = "DP-1"; }
+        { workspace = "3"; output = "DP-1"; }
+        { workspace = "4"; output = "DP-1"; }
+        { workspace = "5"; output = "DP-1"; }
       ];
     };
-    extraConfig = "workspace 1 output eDP-1\nworkspace 2 output eDP-1\nworkspace 11 output DP-1\nworkspace 12 output DP-1\nworkspace 6 output HDMI-A-1\nworkspace 7 output HDMI-A-1\ndefault_border pixel 2\nfor_window [app_id=\"calendar\"] floating enable, resize set width 300px height 220px, move position 810 0";
+    extraConfig = "workspace 6 output eDP-1\nworkspace 7 output eDP-1\nworkspace 1 output DP-1\nworkspace 2 output DP-1\nworkspace 11 output HDMI-A-1\nworkspace 12 output HDMI-A-1\ndefault_border pixel 2\nfor_window [app_id=\"calendar\"] floating enable, resize set width 300px height 220px, move position 810 0";
   };
 
 
@@ -149,7 +151,7 @@ in {
     chromium
     qmk
     swaybg
-    qutebrowser
+    #qutebrowser
     freecad
     elf2uf2-rs
     nautilus
@@ -389,17 +391,17 @@ in {
   programs.nixvim = {
     imports = [
       /home/istipisti113/config/home/nixvim/nixvim.nix
-      #/home/istipisti113/.config/home-manager/beeper.nix
     ];
   };
 
-  programs.neovim = {
-    enable = false;
-    extraPackages = with pkgs; [ telescope ripgrep fd ];
-    plugins = with pkgs.vimPlugins; [
-      nvim-lspconfig
-      nvim-cmp cmp-nvim-lsp cmp-buffer cmp-path cmp_luasnip nvim-lspconfig
-      lazy-nvim
-    ];
-  };
+  #programs.neovim = {
+  #  enable = false;
+  #  extraPackages = with pkgs; [ telescope ripgrep fd ];
+  #  plugins = with pkgs.vimPlugins; [
+  #    nvim-lspconfig
+  #    #nvim-cmp cmp-nvim-lsp cmp-buffer cmp-path cmp_luasnip
+  #    nvim-lspconfig
+  #    lazy-nvim
+  #  ];
+  #};
 }

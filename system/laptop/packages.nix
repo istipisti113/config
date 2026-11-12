@@ -11,7 +11,7 @@
     #wine
     winetricks
     protontricks
-    wineWowPackages.stable
+    #wineWowPackages.stable
     lshw
     nnn
     #discord-screenaudio
@@ -30,7 +30,7 @@
     gptfdisk
     gparted
     lutris
-    godot
+    #godot
     #unityhub
     unrar
     obs-studio-plugins.obs-vkcapture
@@ -65,18 +65,17 @@
     unstable.codecrafters-cli
 
     SDL2
-    sigdigger
+    #sigdigger
     nfs-utils
 
     wireshark
     nmap
-    metasploit
+    #metasploit
 
     xorg.libX11
     lix
     #dotnet-runtime_8
     #dotnet-runtime_9
-    dotnet-runtime_10
     #dotnet-runtime_10
 
     vulkan-loader
@@ -106,7 +105,7 @@
     openscad-lsp
 
     doctoc
-    vscode
+    #vscode
     inkscape
 
     inetutils #telnet for connecting to the mks tinybee
@@ -119,7 +118,7 @@
 
     woeusb
     ntfs3g
-    ventoy
+    #ventoy
 
     bruno
     (pkgs.callPackage ./tauri-bitlingo.nix { })

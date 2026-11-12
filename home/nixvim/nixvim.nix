@@ -201,7 +201,7 @@ in
       settings.indent.enable = true;
       settings.highlight.enable = true;
     };
-    cmp.enable = true;
+    #cmp.enable = true;
     lualine.enable = true;
     lsp.enable = true;
 

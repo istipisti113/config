@@ -24,7 +24,7 @@
     logmein-hamachi
     unstable.tailscale
 
-    alacritty
+    #unstable.alacritty
     waybar
     wofi
     xorg.xinit

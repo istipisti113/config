@@ -31,18 +31,13 @@ let
     RestrictRealtime = true;
   };
 
-  home-manager = builtins.fetchTarball {
-    url = "https://github.com/nix-community/home-manager/archive/release-25.11.tar.gz";
-    sha256 = "13sahz1mxbk7n67jvz9fi0f85ax7l6s3ffiwa6x0rfrwfwhgj7x3";
-  };
   nurpkgs = import (builtins.fetchTarball {
     url = "https://github.com/nix-community/NUR/archive/main.tar.gz";
     sha256 = "0000000000000000000000000000000000000000000000000000";
   }) { inherit pkgs; };
   unstable = import (fetchTarball {
     url = "https://github.com/NixOS/nixpkgs/tarball/nixos-unstable";
-    sha256 = "1ckpy9lka9yis766ybpjkqd5fwf1bpd1y24fw8p9ga976fh177yf";
-
+    sha256 = "sha256-SvB8u5qaJAOwZZyZciqTVOg/rBoUs2w0sFTU6ED51AQ=";
   }) {
     config.allowUnfree = true;
     system = "x86_64-linux";
@@ -72,25 +67,19 @@ in{
   #nixpkgs.overlays = [nurpkgs.overlay];
 
   nixpkgs.overlays = [
-      #(final: prev: {
-      #  nvidia_x11 = prev.nvidia_x11.override {
-      #    acceptLicense = true;
-      #  };
-      #})
-
     (self: super: {
       unstable = import unstable.path {
         inherit (super) system config;
       };
     })
 
-      (final: prev: { #lix
-        inherit (prev.lixPackageSets.stable)
-        nixpkgs-review
-        nix-eval-jobs
-        nix-fast-build
-        colmena;
-      })
+    (final: prev: { #lix
+      inherit (prev.lixPackageSets.stable)
+      nixpkgs-review
+      nix-eval-jobs
+      nix-fast-build
+      colmena;
+    })
   ];
 
   nixpkgs.config.packageOverrides = pkgs: {
@@ -98,10 +87,10 @@ in{
       inherit pkgs;
     };
   };
-  nixpkgs.config.permittedInsecurePackages = [
-    "electron-39.8.10"
-    "ventoy-1.1.10"
-  ];
+  #nixpkgs.config.permittedInsecurePackages = [
+  #  "electron-39.8.10"
+  #  "ventoy-1.1.10"
+  #];
 
   imports = 
     [
@@ -135,21 +124,15 @@ in{
   #boot.resumeDevice = "/dev/disk/by-uuid/fcf14eaf-ee88-4a23-838a-5b23386b8187";
   boot.initrd.luks.devices."luks-7ae0038e-0f2c-4655-8a6b-0ca7766005a6".device = "/dev/disk/by-uuid/7ae0038e-0f2c-4655-8a6b-0ca7766005a6";
 
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages; # LTS
+  #boot.kernelPackages = pkgs.linuxPackages_zen; # zen
+  #boot.kernelPackages = pkgs.linuxPackages_latest; # Latest
   boot.extraModulePackages =  [
-  	pkgs.linuxPackages_latest.v4l2loopback
-      #(pkgs.linuxPackages_latest.v4l2loopback.overrideAttrs (oldAttrs: {
-      #  version = "0.13.2-manual";
-      #  src = pkgs.fetchFromGitHub {
-      #    owner = "umlaeute";
-      #    repo = "v4l2loopback";
-      #    rev = "v0.13.2";
-      #    hash = "sha256-rcwgOXnhRPTmNKUppupfe/2qNUBDUqVb3TeDbrP5pnU=";
-      #  };
-      #}))
+    #pkgs.linuxPackages_latest.v4l2loopback # was working on 7.3.3, not on zen
+    config.boot.kernelPackages.v4l2loopback
   ];
   boot.kernelModules = ["v4l2loopback" 
-    #"uinput"
+    #"uinput" 
     "hid-sony" "hid-playstation"];
   boot.kernelParams = ["modpbrobe.blacklist=dvb_usb_rtl28xxu"];
   boot.extraModprobeConfig = ''
@@ -168,7 +151,7 @@ in{
       owner = "root";
       group = "root";
       source = "${pkgs.bubblewrap}/bin/bwrap";
-      setuid = true;
+      setuid = false;
     };
   };
   security.polkit.enable = true;
@@ -263,12 +246,12 @@ in{
   ];
   services.teamviewer.enable = true;
 
-  services.logmein-hamachi.enable = true;
+  #services.logmein-hamachi.enable = true;
   services.tailscale.enable = true;
   services.tailscale.package = unstable.tailscale;
   services.mullvad-vpn.enable = true;
 
-  services.flatpak.enable = true;
+  #services.flatpak.enable = true;
 
   programs.nix-ld.enable = true;
   programs.nix-ld.libraries = with pkgs; [
@@ -298,7 +281,7 @@ in{
     binfmt = true;
   };
 
-  programs.hyprland.enable = true;
+  programs.hyprland.enable = false;
   programs.zsh.enable = true;
   programs.fish.enable = true;
   programs.sway = {
@@ -314,7 +297,7 @@ in{
     #    '';
   };
 
-  hardware.rtl-sdr.enable = true;
+  hardware.rtl-sdr.enable = false;
   services.udev.packages = with pkgs; [via oversteer rtl-sdr game-devices-udev-rules];
   hardware.enableRedistributableFirmware = true;
   hardware.bluetooth = {
@@ -332,25 +315,29 @@ in{
   hardware.graphics.enable = true;
   hardware.graphics.enable32Bit = true;
 
-  hardware.nvidia = {
-    modesetting.enable = lib.mkDefault true;
-    powerManagement.enable = false;
-    powerManagement.finegrained = false;
-    open = false;
-    nvidiaSettings = true;
-    prime = {
-      sync.enable = false;
-      intelBusId = "PCI:0:2:0";
-      nvidiaBusId = "PCI:1:0:0";
-      #   offload = {
-      #     enable = true;
-      #     enableOffloadCmd = true;
-      #   };
-    };
-  };
-  services.xserver.videoDrivers = [ "modesetting" "nouveau" ]; 
+    #hardware.nvidia = {
+    #  modesetting.enable = lib.mkDefault true;
+    #  package = config.boot.kernelPackages.nvidiaPackages.latest;
+    #  powerManagement.enable = true;
+    #  powerManagement.finegrained = false;
+    #  open = false;
+    #  nvidiaSettings = true;
+    #  prime = {
+    #    sync.enable = false;
+    #    intelBusId = "PCI:0:2:0";
+    #    nvidiaBusId = "PCI:1:0:0";
+    #    #   offload = {
+    #    #     enable = true;
+    #    #     enableOffloadCmd = true;
+    #    #   };
+    #  };
+    #};
+    #hardware.nvidia = {
+    #  open = false;
+    #};
+  services.xserver.videoDrivers = [ "modesetting" "nouveau"];
+  #services.xserver.videoDrivers = [ "modesetting" "nouveau" ];
   #services.xserver.videoDrivers = [ "nvidia" ]; 
-  #hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
   services.blueman.enable = true;
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -380,8 +367,11 @@ in{
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "25.11"; # Did you read the comment?
 
-  programs.adb.enable = true;
+  #programs.adb.enable = true;
   nixpkgs.config.allowUnfree = lib.mkOverride 0 true;
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+    "cmp-nvim-lsp-document-symbol"
+  ];
   #nixpkgs.config.nvidia.acceptLicense = lib.mkOverride 0 true;
 
   specialisation = {
@@ -393,18 +383,18 @@ in{
     #    prime.sync.enable = lib.mkForce false;
     #  };
     #};
-    net-merge.configuration = {
-      programs.net-merge = {
-        enable = true;
-        autostart = true;
-      };
-      networking.networkmanager.enable = true;
-      networking.firewall = {
-        #rejectPackets = true;
-        checkReversePath = false; #net-merge
-        trustedInterfaces = [ "net-merge" ];
-      };
-    };
+    #net-merge.configuration = {
+    #  programs.net-merge = {
+    #    enable = true;
+    #    autostart = true;
+    #  };
+    #  networking.networkmanager.enable = true;
+    #  networking.firewall = {
+    #    #rejectPackets = true;
+    #    checkReversePath = false; #net-merge
+    #    trustedInterfaces = [ "net-merge" ];
+    #  };
+    #};
 
     nvidia-offload.configuration = {
       #nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (nixpkgs.lib.getName pkg) [
@@ -417,17 +407,11 @@ in{
       #nixpkgs.config.nvidia.acceptLicense = lib.mkOverride 0 true;
       #nixpkgs.config.allowUnfreePredicate = _: true;
       hardware.nvidia = {
-        package = config.boot.kernelPackages.nvidiaPackages.stable.overrideAttrs (oldAttrs: rec {
-          version = "595.80";
-          src = pkgs.fetchurl {
-            url = "https://download.nvidia.com/XFree86/Linux-x86_64/${version}/NVIDIA-Linux-x86_64-${version}.run";
-            sha256 = "sha256-PVTIP+B/01c/8M66hXTAYTLg9T2Hy9u1gq43K7TF1Hg=";
-          };
-        });
+        #package = config.boot.kernelPackages.nvidiaPackages.latest;
         #vulkan.enable = true;
         modesetting.enable =  true;
         nvidiaSettings = true;
-        open = false;
+        open = lib.mkForce false;
         prime = {
           sync.enable = false;
           intelBusId = "PCI:0:2:0";
