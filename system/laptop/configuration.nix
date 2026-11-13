@@ -111,7 +111,6 @@ in{
 
   #home-manager.users.istipisti113 = import /home/istipisti113/.config/home-manager/home.nix;
   #nixpkgs.config.allowUnfree = true;
-  #nixpkgs.config.allowUnfree = true;
   #nixpkgs.config.nvidia.acceptLicense = true;
 
   boot.kernel.sysctl = {
@@ -224,7 +223,7 @@ in{
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   security.sudo.enable = true;
-  security.apparmor.enable = true;
+  #security.apparmor.enable = true;
 
   # Allow unfree packages
   #nixpkgs.config.allowUnfree = true;
@@ -247,9 +246,9 @@ in{
   services.teamviewer.enable = true;
 
   #services.logmein-hamachi.enable = true;
-  services.tailscale.enable = true;
-  services.tailscale.package = unstable.tailscale;
-  services.mullvad-vpn.enable = true;
+  #services.tailscale.enable = true;
+  #services.tailscale.package = unstable.tailscale;
+  #services.mullvad-vpn.enable = true;
 
   #services.flatpak.enable = true;
 
