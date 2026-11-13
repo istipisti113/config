@@ -123,8 +123,8 @@ in{
   #boot.resumeDevice = "/dev/disk/by-uuid/fcf14eaf-ee88-4a23-838a-5b23386b8187";
   boot.initrd.luks.devices."luks-7ae0038e-0f2c-4655-8a6b-0ca7766005a6".device = "/dev/disk/by-uuid/7ae0038e-0f2c-4655-8a6b-0ca7766005a6";
 
-  boot.kernelPackages = pkgs.linuxPackages; # LTS
-  #boot.kernelPackages = pkgs.linuxPackages_zen; # zen
+  #boot.kernelPackages = pkgs.linuxPackages; # LTS
+  boot.kernelPackages = pkgs.linuxPackages_zen; # zen
   #boot.kernelPackages = pkgs.linuxPackages_latest; # Latest
   boot.extraModulePackages =  [
     #pkgs.linuxPackages_latest.v4l2loopback # was working on 7.3.3, not on zen
@@ -403,6 +403,7 @@ in{
       #];
       #boot.blacklistedKernelModules = [ "i915" ];
       nixpkgs.config.allowUnfree = lib.mkOverride 0 true;
+      boot.kernelPackages = lib.mkForce pkgs.linuxPackages; # LTS
       #nixpkgs.config.nvidia.acceptLicense = lib.mkOverride 0 true;
       #nixpkgs.config.allowUnfreePredicate = _: true;
       hardware.nvidia = {
